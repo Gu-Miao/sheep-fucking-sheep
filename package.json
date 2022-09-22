@@ -1,7 +1,8 @@
 {
   "name": "sheep-fucking-sheep",
   "scripts": {
-    "start": "vite"
+    "start": "vite",
+    "build": "vite build"
   },
   "devDependencies": {
     "less": "^4.1.3",
