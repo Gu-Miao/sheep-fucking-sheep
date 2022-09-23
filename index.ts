@@ -1,7 +1,7 @@
 import { colors, createRandom, throttle } from "./utils";
 
 function createCards() {
-  const count = createRandom(20, 100);
+  const count = createRandom(30, 60);
   const numbers = {};
 
   for (let i = 0; i < count; i++) {
@@ -34,13 +34,13 @@ function startGame() {
   createCards();
 }
 
-function shouldRemove(arr: number[], value: number) {
+function findIndexes(arr: number[], value: number) {
   let indexes: number[] = [];
   for (let i = 0; i < arr.length; i++) {
     if (arr[i] === value) indexes.push(i);
     if (indexes.length === 2) return indexes;
   }
-  return false;
+  return indexes;
 }
 
 function resort() {
@@ -60,15 +60,18 @@ function handleStageClick(e: MouseEvent) {
   el.style.transform = `translate(${stack.length * 50}px, 51px)`;
   el.style.zIndex = "5";
   const value = +el.innerHTML;
-  const items = shouldRemove(
+  const [i1, i2] = findIndexes(
     stack.map((el) => +el.innerHTML),
     value
   );
-  if (items) {
-    const item1 = stack[items[0]];
-    const item2 = stack[items[1]];
-    stack.splice(items[0], 1);
-    stack.splice(items[1] - 1, 1);
+  if (i2) {
+    stack = [...stack.slice(0, i2 + 1), el, ...stack.slice(i2 + 1)];
+    resort();
+    const item1 = stack[i1];
+    const item2 = stack[i2];
+    stack.splice(i1, 1);
+    stack.splice(i2 - 1, 1);
+    stack.splice(i2 - 1, 1);
     el.addEventListener("transitionend", () => {
       el.remove();
       item1.remove();
@@ -81,7 +84,12 @@ function handleStageClick(e: MouseEvent) {
       }
     });
   } else {
-    stack.push(el);
+    if (i1 !== undefined) {
+      stack = [...stack.slice(0, i1 + 1), el, ...stack.slice(i1 + 1)];
+      resort();
+    } else {
+      stack.push(el);
+    }
   }
   if (stack.length === 8) {
     alert("You lose!");
