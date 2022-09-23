@@ -23,7 +23,10 @@ export const colors = [
 ];
 
 export function createRandom(min: number, max: number) {
-  return Math.min(max, Math.max(min, Math.round(Math.random() * max)));
+  return Math.min(
+    max,
+    Math.max(min, Math.round(Math.random() * (max - min) + min))
+  );
 }
 
 export function throttle<T extends (...args: any[]) => any>(
