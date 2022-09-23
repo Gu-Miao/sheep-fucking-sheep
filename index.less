@@ -31,7 +31,7 @@ body {
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: #eee;
+  background: #eee;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,7 +40,12 @@ body {
   position: absolute;
   left: 0;
   bottom: 0;
-  transition: 0.8s ease-in-out;
+  transition: transform 0.8s ease-in-out, background-color 0.25s ease-in-out;
+
+  &:hover,
+  &:active {
+    background: #e2e2e2;
+  }
 }
 .footer {
   width: 400px;

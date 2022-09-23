@@ -21,6 +21,7 @@ function createCards() {
       const y = -createRandom(0, 35) * 10;
       node.style.transform = `translate(${x}px, ${y}px)`;
       node.style.color = color;
+      node.style.zIndex = createRandom(0, 4).toString();
       node.innerHTML = number.toString();
       stage.append(node);
     }
