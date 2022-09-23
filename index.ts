@@ -1,85 +1,93 @@
-const colors = [
-  '#1abc9c',
-  '#2ecc71',
-  '#3498db',
-  '#9b59b6',
-  '#34495e',
-  '#16a085',
-  '#27ae60',
-  '#2980b9',
-  '#8e44ad',
-  '#2c3e50',
-  '#f1c40f',
-  '#e67e22',
-  '#e74c3c',
-  '#f39c12',
-  '#d35400',
-  '#c0392b',
-]
+import { colors, createRandom, throttle } from "./utils";
 
-function createRandom(min: number, max: number) {
-  return Math.min(max, Math.max(min, Math.round(Math.random() * max)))
+function createCards() {
+  const count = createRandom(20, 100);
+  const numbers = {};
+
+  for (let i = 0; i < count; i++) {
+    const number = Math.round(Math.random() * 100);
+    let color: string;
+    if (number in numbers) {
+      color = numbers[number];
+    } else {
+      color = colors[createRandom(0, colors.length - 1)];
+      numbers[number] = color;
+    }
+
+    for (let j = 0; j < 3; j++) {
+      const node = document.createElement("div");
+      node.classList.add("card");
+      const x = createRandom(0, 35) * 10;
+      const y = -createRandom(0, 35) * 10;
+      node.style.transform = `translate(${x}px, ${y}px)`;
+      node.style.color = color;
+      node.innerHTML = number.toString();
+      stage.append(node);
+    }
+  }
 }
 
-function createXYZ() {
-  return [createRandom(1, 13) * 25, -createRandom(1, 13) * 25, createRandom(0, 4)]
+function startGame() {
+  stack = [];
+  stage.innerHTML = "";
+  createCards();
 }
 
 function shouldRemove(arr: number[], value: number) {
-  let indexes: number[] = []
+  let indexes: number[] = [];
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i] === value) indexes.push(i)
-    if (indexes.length === 2) return indexes
+    if (arr[i] === value) indexes.push(i);
+    if (indexes.length === 2) return indexes;
   }
-  return false
+  return false;
 }
 
-function generateData() {
-  const result: string[] = []
-  const count = createRandom(10, 20)
-  for (let i = 0; i < count; i++) {
-    const number = Math.round(Math.random() * 100)
-    const color = colors[createRandom(0, colors.length - 1)]
-    for (let j = 0; j < 3; j++) {
-      const [x, y, z] = createXYZ()
-      result.push(
-        `<div class="card" style="transform: translate(${x}px, ${y}px); z-index: ${z}; color: ${color};">${number}</div>`
-      )
-    }
-  }
+function resort() {
+  stack.forEach((el, i) => {
+    el.style.transform = `translate(${i * 50}px, 51px)`;
+  });
+}
 
-  const stage = document.querySelector('.stage') as HTMLDivElement
-  stage.innerHTML = result.join('\n')
+const stage = document.querySelector(".stage") as HTMLDivElement;
 
-  stage.addEventListener('click', e => {
-    const el = e.target as HTMLDivElement
-    if (!el.classList.contains('card')) return
-    el.style.transform = `translate(${stack.length * 50}px, 52px)`
-    const value = +el.innerHTML
-    const items = shouldRemove(
-      stack.map(el => +el.innerHTML),
-      value
-    )
-    if (items) {
-      el.remove()
-      stack[items[0]].remove()
-      stack[items[1]].remove()
-      stack.splice(items[0], 1)
-      stack.splice(items[1] - 1, 1)
-      if (!document.querySelector('.card')) {
-        alert('You win')
-        window.location.reload()
+let stack: HTMLDivElement[] = [];
+
+function handleStageClick(e: MouseEvent) {
+  const el = e.target as HTMLDivElement;
+  if (!el.classList.contains("card")) return;
+  if (stack.includes(el)) return;
+  el.style.transform = `translate(${stack.length * 50}px, 51px)`;
+  el.style.zIndex = "5";
+  const value = +el.innerHTML;
+  const items = shouldRemove(
+    stack.map((el) => +el.innerHTML),
+    value
+  );
+  if (items) {
+    const item1 = stack[items[0]];
+    const item2 = stack[items[1]];
+    stack.splice(items[0], 1);
+    stack.splice(items[1] - 1, 1);
+    el.addEventListener("transitionend", () => {
+      el.remove();
+      item1.remove();
+      item2.remove();
+      resort();
+
+      if (!document.querySelector(".card")) {
+        alert("You win");
+        startGame();
       }
-    } else {
-      stack.push(el)
-    }
-    if (stack.length === 8) {
-      alert('You lose!')
-      window.location.reload()
-    }
-  })
+    });
+  } else {
+    stack.push(el);
+  }
+  if (stack.length === 8) {
+    alert("You lose!");
+    startGame();
+  }
 }
 
-generateData()
+stage.addEventListener("click", throttle(handleStageClick, 200));
 
-const stack: HTMLDivElement[] = []
+startGame();
