@@ -1,8 +1,10 @@
 import { colors, createRandom, throttle } from "./utils";
 
+const numbers = {};
+
 function createCards() {
-  const count = createRandom(30, 60);
-  const numbers = {};
+  count = createRandom(42, 85);
+  rest.innerHTML = count.toString();
 
   for (let i = 0; i < count; i++) {
     const number = Math.round(Math.random() * 100);
@@ -49,8 +51,10 @@ function resort() {
   });
 }
 
+const rest = document.querySelector(".rest") as HTMLParagraphElement;
 const stage = document.querySelector(".stage") as HTMLDivElement;
 
+let count = 0;
 let stack: HTMLDivElement[] = [];
 
 function handleStageClick(e: MouseEvent) {
@@ -77,8 +81,10 @@ function handleStageClick(e: MouseEvent) {
       item1.remove();
       item2.remove();
       resort();
+      count--;
+      rest.innerHTML = count.toString();
 
-      if (!document.querySelector(".card")) {
+      if (!count) {
         alert("You win");
         startGame();
       }
