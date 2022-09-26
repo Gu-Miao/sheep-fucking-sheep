@@ -1,4 +1,4 @@
-import { colors, createRandom, throttle } from "./utils";
+import { colors, createRandom, throttle, debounce } from "./utils";
 
 const numbers = {};
 
@@ -30,9 +30,9 @@ function createCards() {
     for (let j = 0; j < 3; j++) {
       const node = document.createElement("div");
       node.classList.add("card");
-      const x = createRandom(0, 35) * 10;
-      const y = -createRandom(0, 35) * 10;
-      node.style.transform = `translate(${x}px, ${y}px)`;
+      const x = createRandom(0, 35);
+      const y = -createRandom(0, 35);
+      node.style.transform = `translate(calc(var(--grid-size) * ${x}), calc(var(--grid-size) * ${y}))`;
       node.style.color = color;
       node.style.zIndex = createRandom(0, 4).toString();
       node.innerHTML = number.toString();
@@ -58,10 +58,11 @@ function findIndexes(arr: number[], value: number) {
 
 function resort() {
   stack.forEach((el, i) => {
-    el.style.transform = `translate(${i * 50}px, 51px)`;
+    el.style.transform = `translate(${i * cardSize}px, ${cardSize + 2}px)`;
   });
 }
 
+const container = document.querySelector(".container") as HTMLDListElement;
 const rest = document.querySelector(".rest") as HTMLParagraphElement;
 const stage = document.querySelector(".stage") as HTMLDivElement;
 
@@ -72,7 +73,9 @@ function handleStageClick(e: MouseEvent) {
   const el = e.target as HTMLDivElement;
   if (!el.classList.contains("card")) return;
   if (stack.includes(el)) return;
-  el.style.transform = `translate(${stack.length * 50}px, 51px)`;
+  el.style.transform = `translate(${stack.length * cardSize}px, ${
+    cardSize + 2
+  }px)`;
   el.style.zIndex = "5";
   const value = +el.innerHTML;
   const [i1, i2] = findIndexes(
@@ -114,6 +117,18 @@ function handleStageClick(e: MouseEvent) {
   }
 }
 
-stage.addEventListener("click", throttle(handleStageClick, 200));
+let cardSize = 50;
 
+function handleResize() {
+  const { clientWidth } = document.documentElement;
+  cardSize = Math.min(Math.floor((clientWidth - 40 - 4) / 8), 50);
+
+  container.style.setProperty("--card-size", `${cardSize}px`);
+  container.style.setProperty("--grid-size", `${cardSize / 5}px`);
+}
+
+window.addEventListener("resize", debounce(handleResize));
+stage.addEventListener("click", throttle(handleStageClick));
+
+handleResize();
 startGame();

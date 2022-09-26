@@ -20,7 +20,7 @@ export function createRandom(min: number, max: number) {
 
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
-  timeFrame: number
+  timeFrame: number = 200
 ) {
   let lastTime = 0;
   return function (...args: Parameters<T>) {
@@ -29,5 +29,20 @@ export function throttle<T extends (...args: any[]) => any>(
       func(...args);
       lastTime = now;
     }
+  };
+}
+
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number = 200
+) {
+  let timeout: number | undefined;
+  return function (...args: Parameters<T>) {
+    const context = this;
+    if (timeout !== undefined) clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      timeout = undefined;
+      func.apply(context, args);
+    }, wait);
   };
 }

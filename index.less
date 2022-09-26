@@ -11,6 +11,8 @@ body {
 .container {
   background-color: white;
   padding: 20px;
+  --grid-size: 10px;
+  --card-size: 50px;
 }
 p {
   margin: 0;
@@ -20,8 +22,8 @@ p {
   user-select: none;
 }
 .stage {
-  width: 400px;
-  height: 400px;
+  width: calc(var(--card-size) * 8);
+  height: calc(var(--card-size) * 8);
   border: 2px solid black;
   border-bottom: none;
   background-image: linear-gradient(
@@ -30,12 +32,12 @@ p {
       transparent 0
     ),
     linear-gradient(1turn, rgba(0, 0, 0, 0.08) 8%, transparent 0);
-  background-size: 10px 10px;
+  background-size: var(--grid-size) var(--grid-size);
   position: relative;
 }
 .card {
-  width: 48px;
-  height: 48px;
+  width: calc(var(--card-size) - 2px);
+  height: calc(var(--card-size) - 2px);
   font-family: Helvetica;
   font-weight: bold;
   border-radius: 50%;
@@ -51,9 +53,10 @@ p {
   left: 0;
   bottom: 0;
   transition: transform 0.8s ease-in-out;
+  -webkit-tap-highlight-color: transparent;
 }
 .footer {
-  width: 400px;
-  height: 50px;
+  width: calc(var(--card-size) * 8);
+  height: var(--card-size);
   border: 2px solid black;
 }
