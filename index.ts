@@ -3,11 +3,22 @@ import { colors, createRandom, throttle } from "./utils";
 const numbers = {};
 
 function createCards() {
-  count = createRandom(42, 85);
+  count = createRandom(42, 84);
+
   rest.innerHTML = count.toString();
 
+  let current = 0;
+  const max = Math.floor(count / 21) * 11 + 10;
+  const remainder = Math.max(0.97 ** (count - 90) - 0.5, 1);
+
   for (let i = 0; i < count; i++) {
-    const number = Math.round(Math.random() * 100);
+    let number = Math.round(Math.random() * 99);
+    if (i % remainder < 1 && current++ < max) {
+      const keys = Object.keys(numbers);
+      if (keys.length) {
+        number = +keys[createRandom(0, keys.length - 1)];
+      }
+    }
     let color: string;
     if (number in numbers) {
       color = numbers[number];
