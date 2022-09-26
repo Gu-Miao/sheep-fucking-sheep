@@ -7,16 +7,17 @@ function createCards() {
 
   rest.innerHTML = count.toString();
 
-  let current = 0;
-  const max = Math.floor(count / 21) * 11 + 10;
-  const remainder = Math.max(0.97 ** (count - 90) - 0.5, 1);
+  const max = Math.floor(count / 21) * 10 + 15;
+  const remainder = 0.978 ** (count - 90);
 
   for (let i = 0; i < count; i++) {
     let number = Math.round(Math.random() * 99);
-    if (i % remainder < 1 && current++ < max) {
+
+    if (i % remainder <= 0.99 && i < max) {
       const keys = Object.keys(numbers);
-      if (keys.length) {
-        number = +keys[createRandom(0, keys.length - 1)];
+      if (keys.length >= 3) {
+        const index = createRandom(0, keys.length - 1);
+        number = +keys[index];
       }
     }
     let color: string;
