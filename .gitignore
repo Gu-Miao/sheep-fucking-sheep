@@ -7,5 +7,5 @@ node_modules/
 # logs
 pnpm-debug.log*
 
-# katex
-public/katex
+# dev pwa
+dev-dist
