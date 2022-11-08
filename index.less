@@ -14,12 +14,33 @@ body {
   --grid-size: 10px;
   --card-size: 50px;
 }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 p {
   margin: 0;
   margin-bottom: 10px;
   color: #44bd32;
   font-weight: bold;
   user-select: none;
+}
+.refresh {
+  font-size: 0.8em;
+  border: none;
+  color: white;
+  background: #09d;
+  padding: 0.3em 0.8em;
+  border-radius: 0.4em;
+  box-shadow: none;
+  cursor: pointer;
+  transition: 0.25s ease-in-out;
+
+  &:hover,
+  &:active {
+    background: #08b;
+  }
 }
 .stage {
   width: calc(var(--card-size) * 8);

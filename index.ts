@@ -63,6 +63,7 @@ function resort() {
   });
 }
 
+const refresh = document.querySelector(".refresh") as HTMLButtonElement;
 const container = document.querySelector(".container") as HTMLDListElement;
 const rest = document.querySelector(".rest") as HTMLParagraphElement;
 const stage = document.querySelector(".stage") as HTMLDivElement;
@@ -129,6 +130,7 @@ function handleResize() {
 }
 
 window.addEventListener("resize", debounce(handleResize));
+refresh.addEventListener("click", debounce(startGame));
 stage.addEventListener("click", throttle(handleStageClick));
 
 handleResize();
