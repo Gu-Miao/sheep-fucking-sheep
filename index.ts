@@ -3,7 +3,7 @@ import { colors, createRandom, throttle, debounce } from "./utils";
 const numbers = {};
 
 function createCards() {
-  count = createRandom(42, 84);
+  count = createRandom(40, 100);
 
   rest.innerHTML = count.toString();
 
@@ -119,11 +119,12 @@ function handleStageClick(e: MouseEvent) {
   }
 }
 
-let cardSize = 50;
+const baseCardSize = 60;
+let cardSize = baseCardSize;
 
 function handleResize() {
   const { clientWidth } = document.documentElement;
-  cardSize = Math.min(Math.floor((clientWidth - 40 - 4) / 8), 50);
+  cardSize = Math.min(Math.floor((clientWidth - 40 - 4) / 8), baseCardSize);
 
   container.style.setProperty("--card-size", `${cardSize}px`);
   container.style.setProperty("--grid-size", `${cardSize / 5}px`);

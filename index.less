@@ -12,7 +12,6 @@ body {
   background-color: white;
   padding: 20px;
   --grid-size: 10px;
-  --card-size: 50px;
 }
 header {
   display: flex;
@@ -59,6 +58,7 @@ p {
 .card {
   width: calc(var(--card-size) - 2px);
   height: calc(var(--card-size) - 2px);
+  font-size: 22px;
   font-family: Helvetica;
   font-weight: bold;
   border-radius: 50%;
@@ -75,6 +75,7 @@ p {
   bottom: 0;
   transition: transform 0.8s ease-in-out;
   -webkit-tap-highlight-color: transparent;
+
 }
 .footer {
   width: calc(var(--card-size) * 8);
